@@ -4,9 +4,7 @@ from random import randint,randrange
 
 black = (0,0,0)
 white = (255,255,255)
-
 sunset = (253,72,47)
-
 blue = (0,0,225)
 maroon = (128,0,0)
 olive = (128,128,128)
@@ -18,11 +16,11 @@ yellow = (255,236,0)
 purple = (252,67,255)
 
 
-colorChoices = [blue,maroon,olive,silver,greenyellow,brightblue,orange,yellow,purple,white]
+color=[blue,maroon,olive,silver,greenyellow,brightblue,orange,yellow,purple,white]
 
 pygame.init()
 
-crash_sound = pygame.mixer.Sound("crash.wav")
+Hit_sound = pygame.mixer.Sound("crash.wav")
 
 surfaceWidth = 800
 surfaceHeight = 500
@@ -31,10 +29,10 @@ imageHeight = 43
 imageWidth = 100
 
 surface = pygame.display.set_mode((surfaceWidth,surfaceHeight))
-pygame.display.set_caption('Helicopter Escape')
+pygame.display.set_caption('bird Escape')
 clock = pygame.time.Clock()
 
-img = pygame.image.load('Helicopter.png')
+img = pygame.image.load('bird.png')
 
 def level(inta):
     
@@ -47,10 +45,10 @@ def score(count):
     text = font.render("Score: "+str(count), True, white)
     surface.blit(text, [0,0])
 
-def blocks(x_block, y_block, block_width, block_height, gap, colorChoice):
+def blocks(x_block, y_block, block_width, block_height, gap, color):
     
-    pygame.draw.rect(surface, colorChoice, [x_block,y_block,block_width,block_height])
-    pygame.draw.rect(surface, colorChoice, [x_block,y_block+block_height+gap,block_width, surfaceHeight])
+    pygame.draw.rect(surface, color, [x_block,y_block,block_width,block_height])
+    pygame.draw.rect(surface, color, [x_block,y_block+block_height+gap,block_width, surfaceHeight])
 
 
 def replay_or_quit():
@@ -81,8 +79,8 @@ def msgSurface(text):
     titleTextRect.center = surfaceWidth / 2, surfaceHeight / 2
     surface.blit(titleTextSurf, titleTextRect)
 
-    pygame.mixer.Sound.play(crash_sound)
-    pygame.mixer.music.stop()
+    #pygame.mixer.Sound.play(crash_sound)
+    #pygame.mixer.music.stop()
     typTextSurf, typTextRect = makeTextObjs('Press any key to continue', smallText)
     typTextRect.center =  surfaceWidth / 2, ((surfaceHeight / 2) + 100)
     surface.blit(typTextSurf, typTextRect)
@@ -98,7 +96,7 @@ def msgSurface(text):
 def gameOver():
     msgSurface('crashed!')
 
-def helicopter(x, y, image):
+def bird(x, y, image):
     surface.blit(img, (x,y))
 
 
@@ -119,7 +117,7 @@ def main():
     
     
 
-    blockColor = colorChoices[randrange(0,len(colorChoices))]
+    blockColor = color[randrange(0,len(color))]
  
     game_over = False
 
@@ -140,7 +138,7 @@ def main():
         y += y_move
 
         surface.fill(black)
-        helicopter(x ,y, img)
+        bird(x ,y, img)
         
 
         blocks(x_block, y_block, block_width, block_height, gap, blockColor)
@@ -154,7 +152,7 @@ def main():
         if x_block < (-1*block_width):
             x_block = surfaceWidth
             block_height = randint(0, (surfaceHeight / 2))
-            blockColor = colorChoices[randrange(0,len(colorChoices))]
+            blockColor = color[randrange(0,len(color))]
             current_score+=1
 
         if x + imageWidth > x_block:
