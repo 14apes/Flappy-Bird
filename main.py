@@ -7,15 +7,22 @@ white = (255,255,255)
 
 sunset = (253,72,47)
 
+blue = (0,0,225)
+maroon = (128,0,0)
+olive = (128,128,128)
+silver = (192,192,192)
 greenyellow = (184,255,0)
 brightblue = (47,228,253)
 orange = (255,113,0)
 yellow = (255,236,0)
 purple = (252,67,255)
 
-colorChoices = [greenyellow,brightblue,orange,yellow,purple]
+
+colorChoices = [blue,maroon,olive,silver,greenyellow,brightblue,orange,yellow,purple,white]
 
 pygame.init()
+
+crash_sound = pygame.mixer.Sound("crash.wav")
 
 surfaceWidth = 800
 surfaceHeight = 500
@@ -24,22 +31,27 @@ imageHeight = 43
 imageWidth = 100
 
 surface = pygame.display.set_mode((surfaceWidth,surfaceHeight))
-pygame.display.set_caption('Helicopter')
+pygame.display.set_caption('Helicopter Escape')
 clock = pygame.time.Clock()
 
 img = pygame.image.load('Helicopter.png')
+
+def level(inta):
+    
+    font = pygame.font.Font('freesansbold.ttf', 20)
+    text = font.render("Level: "+str(inta), True, white)
+    surface.blit(text, [0,20])
 
 def score(count):
     font = pygame.font.Font('freesansbold.ttf', 20)
     text = font.render("Score: "+str(count), True, white)
     surface.blit(text, [0,0])
 
-
 def blocks(x_block, y_block, block_width, block_height, gap, colorChoice):
     
     pygame.draw.rect(surface, colorChoice, [x_block,y_block,block_width,block_height])
     pygame.draw.rect(surface, colorChoice, [x_block,y_block+block_height+gap,block_width, surfaceHeight])
-    
+
 
 def replay_or_quit():
     for event in pygame.event.get([pygame.KEYDOWN, pygame.KEYUP, pygame.QUIT]):
@@ -56,7 +68,10 @@ def replay_or_quit():
 
 def makeTextObjs(text, font):
     textSurface = font.render(text, True, sunset)
-    return textSurface, textSurface.get_rect()
+    return textSurface, textSurface.get_rect()   
+
+
+
 
 def msgSurface(text):
     smallText = pygame.font.Font('freesansbold.ttf', 20)
@@ -66,6 +81,8 @@ def msgSurface(text):
     titleTextRect.center = surfaceWidth / 2, surfaceHeight / 2
     surface.blit(titleTextSurf, titleTextRect)
 
+    pygame.mixer.Sound.play(crash_sound)
+    pygame.mixer.music.stop()
     typTextSurf, typTextRect = makeTextObjs('Press any key to continue', smallText)
     typTextRect.center =  surfaceWidth / 2, ((surfaceHeight / 2) + 100)
     surface.blit(typTextSurf, typTextRect)
@@ -78,11 +95,9 @@ def msgSurface(text):
 
     main()
 
-    
-
 def gameOver():
     msgSurface('crashed!')
-    
+
 def helicopter(x, y, image):
     surface.blit(img, (x,y))
 
@@ -90,20 +105,22 @@ def helicopter(x, y, image):
 def main():
     x = 150
     y = 200
-    y_move = 0
+    y_move = 0 
 
-    x_block = surfaceWidth
-    y_block = 0
+    x_block = surfaceWidth 
+    y_block = 0 
 
     block_width = 75
     block_height = randint(0,(surfaceHeight/2))
-    gap = imageHeight * 3
-    block_move = 4
+    gap = imageHeight * 5
+    block_move = 4 
     current_score = 0
+    current_level = 1
+    
     
 
     blockColor = colorChoices[randrange(0,len(colorChoices))]
-    
+ 
     game_over = False
 
     while not game_over:
@@ -128,6 +145,7 @@ def main():
 
         blocks(x_block, y_block, block_width, block_height, gap, blockColor)
         score(current_score)
+        level(current_level)
         x_block -= block_move
 
         if y > surfaceHeight-40 or y < 0:
@@ -149,19 +167,23 @@ def main():
             if y + imageHeight > block_height+gap:
                 if x < block_width + x_block:
                     gameOver()
-
-        #if x_block < (x - block_width) < x_block + block_move:
-        #    current_score += 1
             
         if 3 <= current_score < 5:
+            
+            
             block_move = 5
-            gap = imageHeight * 2.9
+            gap = imageHeight * 4
+            current_level += 1
         if 5 <= current_score < 8:
+            
             block_move = 6
-            gap = imageHeight *2.8
+            gap = imageHeight *3
+            current_level += 1
         if 8 <= current_score < 14:
+            
             block_move = 7
             gap = imageHeight *2.7
+            current_level += 1
         
                 
                 
