@@ -1,2 +1,4 @@
 #!/bin/bash
-python src/flappyBird.py
+pushd src/
+python flappyBird.py
+popd
