@@ -12,18 +12,18 @@ class FlappyBird:
     def _level(self, inta, level_color, surface):
 
         font = pygame.font.Font('freesansbold.ttf', 20)
-        text = font.render("Level: "+str(inta), True, level_color)
-        surface.blit(text, [0,20])
+        text = font.render("Level: " + str(inta), True, level_color)
+        surface.blit(text, [0, 20])
 
     def _score(self, count, score_color, surface):
         font = pygame.font.Font('freesansbold.ttf', 20)
-        text = font.render("Score: "+str(count), True, score_color)
-        surface.blit(text, [0,0])
+        text = font.render("Score: " + str(count), True, score_color)
+        surface.blit(text, [0, 0])
 
     def _blocks(self, x_block, y_block, block_width, block_height, gap, color, surface, surfaceHeight):
 
-        pygame.draw.rect(surface, color, [x_block,y_block,block_width,block_height])
-        pygame.draw.rect(surface, color, [x_block,y_block+block_height+gap,block_width, surfaceHeight])
+        pygame.draw.rect(surface, color, [x_block, y_block, block_width, block_height])
+        pygame.draw.rect(surface, color, [x_block, y_block + block_height + gap, block_width,  surfaceHeight])
 
 
     def _replay_or_quit(self, ):
