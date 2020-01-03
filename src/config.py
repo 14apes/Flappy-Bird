@@ -35,15 +35,15 @@ def initialize():
 
     # Py Game Initialization
     pygame.init()
-    _ = pygame.mixer.Sound("../media/crash.wav")
+    _ = pygame.mixer.Sound("media/crash.wav")
     # this object will be useful when we want to add music volume contol functionality to the game
-    # configDict["pygame_sound_obj"] = pygame.mixer.Sound("../media/crash.wav")
+    # configDict["pygame_sound_obj"] = pygame.mixer.Sound("media/crash.wav")
 
     configDict["surface"] = pygame.display.set_mode((configDict["surfaceWidth"], configDict["surfaceHeight"]))
     pygame.display.set_caption('Flappy Bird Escape')
     configDict["clock"] = pygame.time.Clock()
 
-    configDict["bird_image"] = pygame.image.load("../media/bird.png")
+    configDict["bird_image"] = pygame.image.load("media/bird.png")
 
 
     configDict["x"] = 150
@@ -72,8 +72,8 @@ def initialize():
     configDict["max_score_in_level"] = 20
     configDict["max_score_possible"] = configDict["max_levels"] * configDict["max_score_in_level"]
     configDict["game_complete_msg"] = "Hurray! You have completed all levels"
-    configDict["smallText"] = pygame.font.Font('freesansbold.ttf', 20)
-    configDict["largeText"] = pygame.font.Font('freesansbold.ttf', 150)
+    configDict["smallText"] = pygame.font.SysFont("Arial", 20)
+    configDict["largeText"] = pygame.font.SysFont("Arial", 150)
 
     background = pygame.Surface(configDict["surface"].get_size())
     background = background.convert()
@@ -81,14 +81,14 @@ def initialize():
     #
     charRect = pygame.Rect((0, 0), (10, 10))
     # print(os.path.abspath("airbender.png"))
-    charImage = pygame.image.load(os.path.abspath("../media/background1.png"))
+    charImage = pygame.image.load(os.path.abspath("media/background1.png"))
     charImage = pygame.transform.scale(charImage, charRect.size)
     charImage = charImage.convert()
 
     background.blit(charImage, charRect)  # This just makes it in the same location
     # # and prints it the same size as the image
     #
-    # configDict["background"] = pygame.image.load("../media/background1.png")
+    # configDict["background"] = pygame.image.load("media/background1.png")
     configDict["background"] = background
 
 
