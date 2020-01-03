@@ -1,3 +1,5 @@
+"""Summary
+"""
 import pygame
 import time
 from random import randint, randrange
@@ -5,28 +7,64 @@ from config import initialize
 
 
 class FlappyBird:
+
+    """Summary
+
+    Attributes:
+        configDict (TYPE): Description
+    """
+
     def __init__(self):
+        """Summary
+
+        Returns:
+            TYPE: Description
+        """
         self.configDict = initialize()
         return
 
-    def _level(self, inta, level_color, surface):
+    def _display_level(self):
+        """Summary
 
+        Returns:
+            TYPE: Description
+        """
         font = pygame.font.Font('freesansbold.ttf', 20)
-        text = font.render("Level: " + str(inta), True, level_color)
-        surface.blit(text, [0, 20])
+        text = font.render("Level: " + str(self.configDict["current_level"]), True, self.configDict["color"][0])
+        self.configDict["surface"].blit(text, [0, 20])
+        return
 
-    def _score(self, count, score_color, surface):
+    def _display_score(self):
+        """Summary
+
+        Returns:
+            TYPE: Description
+        """
         font = pygame.font.Font('freesansbold.ttf', 20)
-        text = font.render("Score: " + str(count), True, score_color)
-        surface.blit(text, [0, 0])
+        text = font.render("Score: " + str(self.configDict["current_score"]), True, self.configDict["color"][0])
+        self.configDict["surface"].blit(text, [0, 0])
+        return
 
-    def _blocks(self, x_block, y_block, block_width, block_height, gap, color, surface, surfaceHeight):
+    def _blocks(self, color):
+        """Summary
 
-        pygame.draw.rect(surface, color, [x_block, y_block, block_width, block_height])
-        pygame.draw.rect(surface, color, [x_block, y_block + block_height + gap, block_width,  surfaceHeight])
+        Args:
+            color (TYPE): Description
+
+        Returns:
+            TYPE: Description
+        """
+        pygame.draw.rect(self.configDict["surface"], color, [self.configDict["x_block"], self.configDict["y_block"], self.configDict["block_width"], self.configDict["block_height"]])
+        pygame.draw.rect(self.configDict["surface"], color, [self.configDict["x_block"], self.configDict["y_block"] + self.configDict["block_height"] + self.configDict["gap"], self.configDict["block_width"],  self.configDict["surfaceHeight"]])
+        return
 
 
-    def _replay_or_quit(self, ):
+    def _replay_or_quit(self):
+        """Summary
+
+        Returns:
+            TYPE: Description
+        """
         for event in pygame.event.get([pygame.KEYDOWN, pygame.KEYUP, pygame.QUIT]):
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -40,130 +78,183 @@ class FlappyBird:
         return None
 
 
-    def _makeTextObjs(self, text, font, sunset):
-        textSurface = font.render(text, True, sunset)
+    def _makeTextObjs(self, text, font):
+        """Summary
+
+        Args:
+            text (TYPE): Description
+            font (TYPE): Description
+
+        Returns:
+            TYPE: Description
+        """
+        textSurface = font.render(text, True, self.configDict["sunset"])
         return textSurface, textSurface.get_rect()
 
 
-    def _msgSurface(self, text):
-        smallText = pygame.font.Font('freesansbold.ttf', 20)
-        largeText = pygame.font.Font('freesansbold.ttf', 150)
+    def _msgSurface(self):
+        """Summary
 
-        titleTextSurf, titleTextRect = self._makeTextObjs(text, largeText, self.configDict["sunset"])
+        Returns:
+            TYPE: Description
+        """
+        titleTextSurf, titleTextRect = self._makeTextObjs(self.configDict["crash_msg"], self.configDict["largeText"])
         titleTextRect.center = self.configDict["surfaceWidth"] / 2, self.configDict["surfaceHeight"] / 2
         self.configDict["surface"].blit(titleTextSurf, titleTextRect)
 
+        # TODO
         #pygame.mixer.Sound.play(crash_sound)
         #pygame.mixer.music.stop()
-        typTextSurf, typTextRect = self._makeTextObjs('Press any key to continue', smallText, self.configDict["sunset"])
+        typTextSurf, typTextRect = self._makeTextObjs(self.configDict["game_continue_msg"], self.configDict["smallText"])
         typTextRect.center =  self.configDict["surfaceWidth"] / 2, ((self.configDict["surfaceHeight"] / 2) + 100)
         self.configDict["surface"].blit(typTextSurf, typTextRect)
 
         pygame.display.update()
         time.sleep(1)
 
-        while self._replay_or_quit() == None:
-            self.configDict["clock"].tick()
-
-        self.fly()
+        if self._replay_or_quit() == None:
+            self.__init__()
+            self.fly()
+        return
 
     def _gameOver(self):
-        self._msgSurface('crashed!')
+        """Summary
 
-    def _bird(self, x, y, image, surface):
-        surface.blit(image, (x,y))
+        Returns:
+            TYPE: Description
+        """
+        self.configDict["game_over"] = True
+        self._msgSurface()
+        return
 
+    def _gameVictory(self):
+        """
 
-    def fly(self):
-        x = 150
-        y = 200
-        y_move = 0
+        Returns:
+            TYPE: Description
+        """
+        typTextSurf, typTextRect = self._makeTextObjs(self.configDict["game_complete_msg"], self.configDict["smallText"])
+        typTextRect.center = self.configDict["surfaceWidth"] / 2, ((self.configDict["surfaceHeight"] / 2))
+        self.configDict["surface"].blit(typTextSurf, typTextRect)
 
-        x_block = self.configDict["surfaceWidth"]
-        y_block = 0
+        pygame.display.update()
+        quit(0)
+        return
 
-        block_width = 75
-        block_height = randint(0,(self.configDict["surfaceHeight"]/2))
-        gap = self.configDict["imageHeight"] * 5
-        block_move = 4
-        current_score = 0
-        current_level = 1
+    def _update_bird(self):
+        """Summary
 
+        Returns:
+            TYPE: Description
+        """
+        self.configDict["surface"].blit(self.configDict["bird_image"], (self.configDict["x"], self.configDict["y"]))
 
+        return
 
-        blockColor = self.configDict["color"][randrange(0,len(self.configDict["color"]))]
+    def _stateValidation(self):
+        """
 
-        game_over = False
-
-        while not game_over:
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    game_over = True
-
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_UP:
-                        y_move = -5
-
-                if event.type == pygame.KEYUP:
-                    if event.key == pygame.K_UP:
-                        y_move = 5
-
-            y += y_move
-
-            self.configDict["surface"].fill(self.configDict["black"])  # black color fill
-            self._bird(x ,y, self.configDict["img"], self.configDict["surface"])
-
-
-            self._blocks(x_block, y_block, block_width, block_height, gap, blockColor, self.configDict["surface"], self.configDict["surfaceHeight"])
-            self._score(current_score, self.configDict["color"][0], self.configDict["surface"])
-            self._level(current_level, self.configDict["color"][0], self.configDict["surface"])
-            x_block -= block_move
-
-            if y > self.configDict["surfaceHeight"]-40 or y < 0:
-                self._gameOver()
-
-            if x_block < (-1*block_width):
-                x_block = self.configDict["surfaceWidth"]
-                block_height = randint(0, (self.configDict["surfaceHeight"] / 2))
-                blockColor = self.configDict["color"][randrange(0,len(self.configDict["color"]))]
-                current_score+=1
-
-            if x + self.configDict["imageWidth"] > x_block:
-                if x < x_block + block_width:
-                    if y < block_height:
-                        if x - self.configDict["imageWidth"] < block_width + x_block:
-                            self._gameOver()
-
-            if x + self.configDict["imageWidth"] > x_block:
-                if y + self.configDict["imageHeight"] > block_height+gap:
-                    if x < block_width + x_block:
+        Return:
+            TYPE: Description
+        """
+        if self.configDict["y"] > self.configDict["surfaceHeight"] - 40 or self.configDict["y"] < 0:
+            self._gameOver()
+        if self.configDict["x"] + self.configDict["imageWidth"] > self.configDict["x_block"]:
+            if self.configDict["x"] < self.configDict["x_block"] + self.configDict["block_width"]:
+                if self.configDict["y"] < self.configDict["block_height"]:
+                    if self.configDict["x"] - self.configDict["imageWidth"] < self.configDict["block_width"] + \
+                            self.configDict["x_block"]:
                         self._gameOver()
 
-            if 3 <= current_score < 5:
+        if self.configDict["x"] + self.configDict["imageWidth"] > self.configDict["x_block"]:
+            if self.configDict["y"] + self.configDict["imageHeight"] > self.configDict["block_height"] + \
+                    self.configDict["gap"]:
+                if self.configDict["x"] < self.configDict["block_width"] + self.configDict["x_block"]:
+                    self._gameOver()
+
+        return
+
+    def _update_gap(self):
+        """
 
 
-                block_move = 5
-                gap = self.configDict["imageHeight"] * 4
-                current_level += 1
-            if 5 <= current_score < 8:
+        """
+        # Decrease gap for each level
+        self.configDict["gap"] = int(self.configDict["gap"] / (0.1 + 0.3 * self.configDict["current_level"]))
+        return
 
-                block_move = 6
-                gap = self.configDict["imageHeight"] *3
-                current_level += 1
-            if 8 <= current_score < 14:
 
-                block_move = 7
-                gap = self.configDict["imageHeight"] *2.7
-                current_level += 1
+    def _update_level(self):
+        """
 
+        Return:
+            Description
+        """
+        if self.configDict["current_score"] % self.configDict["max_score_in_level"] == 0:
+            # Increase level after a  certain score
+            self.configDict["current_level"] += 1
+            self._update_gap()
+        return
+
+    def _compute_score(self):
+        """
+
+        Return:
+            Description
+        """
+        if self.configDict["x_block"] < (-1 * self.configDict["block_width"]):
+            self.configDict["x_block"] = self.configDict["surfaceWidth"]
+            self.configDict["block_height"] = randint(0, (self.configDict["surfaceHeight"] / 2))
+            self.configDict["blockColor"] = self.configDict["color"][randrange(0, len(self.configDict["color"]))]
+            self.configDict["current_score"] += 1
+            self._update_level()
+        return
+
+    def fly(self):
+        """Summary
+
+        Returns:
+            TYPE: Description
+        """
+        while not self.configDict["game_over"] and self.configDict["current_level"] <= self.configDict["max_levels"] and self.configDict["current_score"] <= self.configDict["max_score_possible"]:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
+                    self.configDict["game_over"] = True
+
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP:
+                        self.configDict["y_move"] = -5
+
+                elif event.type == pygame.KEYUP:
+                    if event.key == pygame.K_UP:
+                        self.configDict["y_move"] = 5
+                else:
+                    self.configDict["y_move"] = 5
+
+            self.configDict["y"] += self.configDict["y_move"]
+
+            self.configDict["surface"].fill(self.configDict["black"])  # black color fill
+            # self.configDict["surface"].blit(self.configDict["background"], (0, 0))
+            self._update_bird()
+            self._blocks(self.configDict["blockColor"])
+            self._display_score()
+            self._display_level()
+            self.configDict["x_block"] -= self.configDict["block_move"]
+            self._stateValidation()
+            if not self.configDict["game_over"]:
+                self._compute_score()
+            else:
+                break
             pygame.display.update()
             self.configDict["clock"].tick(60)
+        if self.configDict["current_score"] >= self.configDict["max_score_possible"]:
+            self._gameVictory()
+            print(self.configDict["game_complete_msg"])
         return
 
 
 if __name__ == '__main__':
-    fb = FlappyBird()
-    fb.fly()
+    bird = FlappyBird()
+    bird.fly()
     pygame.quit()
     quit()
