@@ -66,7 +66,7 @@ class FlappyBird:
             TYPE: Description
         """
         for event in pygame.event.get([pygame.KEYDOWN, pygame.KEYUP, pygame.QUIT]):
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
                 pygame.quit()
                 quit()
 
@@ -78,7 +78,7 @@ class FlappyBird:
         return None
 
 
-    def _makeTextObjs(self, text, font):
+    def _makeTextObjs(self, text, font, color):
         """Summary
 
         Args:
@@ -88,11 +88,11 @@ class FlappyBird:
         Returns:
             TYPE: Description
         """
-        textSurface = font.render(text, True, self.configDict["sunset"])
+        textSurface = font.render(text, True, color)
         return textSurface, textSurface.get_rect()
 
 
-    def _msgSurface(self, screen_message, font, centre_offset_x=0, centre_offset_y=0):
+    def _msgSurface(self, screen_message, font, centre_offset_x=0, centre_offset_y=0, color=None):
         """Summary
 
         Returns:
@@ -104,7 +104,9 @@ class FlappyBird:
             centre_offset_x (int, optional): Description
             centre_offset_y (int, optional): Description
         """
-        titleTextSurf, titleTextRect = self._makeTextObjs(screen_message, font)
+        if color is None:
+            color = self.configDict["sunset"]
+        titleTextSurf, titleTextRect = self._makeTextObjs(screen_message, font, color)
         titleTextRect.center = centre_offset_x, centre_offset_y
         self.configDict["surface"].blit(titleTextSurf, titleTextRect)
         return
@@ -238,11 +240,32 @@ class FlappyBird:
         Returns:
             TYPE: Description
         """
-        while self._replay_or_quit is None:
-            # Waiting for user input
-            self._msgSurface()
-            pass
+        # while self._replay_or_quit() is None:
+        #     # Waiting for user input
+        #     # self._msgSurface(self.configDict["start_game_message"], self.configDict["largeText"])
+        #     pass
         while not self.configDict["game_over"] and self.configDict["current_level"] <= self.configDict["max_levels"] and self.configDict["current_score"] <= self.configDict["max_score_possible"]:
+            if self.configDict["pause"]:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        print("Game Unpause! 00")
+                        self.configDict["pause"] = False
+                    else:
+                        # print("Game in Pause")
+                        continue
+                else:
+                    # print("Game in Pause")
+                    continue
+                if event.type == pygame.KEYUP:
+                    if event.key == pygame.K_SPACE:
+                        print("Game Unpause! 01")
+                        self.configDict["pause"] = False
+                    else:
+                        # print("Game in Pause")
+                        continue
+                else:
+                    # print("Game in Pause")
+                    continue
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
                     self.configDict["game_over"] = True
@@ -250,10 +273,27 @@ class FlappyBird:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_UP:
                         self.configDict["y_move"] = -5
+                    elif event.key == pygame.K_SPACE:
+                        if self.configDict["pause"]:
+                            print("Game Unpause! 2")
+                            self.configDict["pause"] = False
+                        else:
+                            print("Game Paused! 2")
+                            self.configDict["pause"] = True
+                            continue
 
                 elif event.type == pygame.KEYUP:
                     if event.key == pygame.K_UP:
                         self.configDict["y_move"] = 5
+                    elif event.key == pygame.K_SPACE:
+                        if self.configDict["pause"]:
+                            print("Game Unpause! 1")
+                            self.configDict["pause"] = False
+                        else:
+                            print("Game Paused! 1")
+                            self.configDict["pause"] = True
+                            continue
+
                 else:
                     self.configDict["y_move"] = 5
 

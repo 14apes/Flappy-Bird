@@ -73,6 +73,7 @@ def initialize():
     configDict["max_score_possible"] = configDict["max_levels"] * configDict["max_score_in_level"]
     configDict["game_complete_msg_hurray"] = "Hurray!"
     configDict["game_complete_msg_desc"] = "You have completed all levels"
+    configDict["start_game_message"] = "Start Game!"
     configDict["smallText"] = pygame.font.SysFont("Arial", 20)
     configDict["largeText"] = pygame.font.SysFont("Arial", 150)
 
@@ -98,6 +99,6 @@ def initialize():
 
     # configDict["background"] = background
     configDict["speed"] = 1
-
+    configDict["pause"] = False
 
     return configDict
