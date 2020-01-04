@@ -1,4 +1,4 @@
-
+#!/usr/bin/env python
 import pygame
 from src.FlappyBird import FlappyBird
 

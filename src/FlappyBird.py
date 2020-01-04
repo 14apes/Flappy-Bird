@@ -92,29 +92,21 @@ class FlappyBird:
         return textSurface, textSurface.get_rect()
 
 
-    def _msgSurface(self):
+    def _msgSurface(self, screen_message, font, centre_offset_x=0, centre_offset_y=0):
         """Summary
 
         Returns:
             TYPE: Description
+
+        Args:
+            screen_message (TYPE): Description
+            font (TYPE): Description
+            centre_offset_x (int, optional): Description
+            centre_offset_y (int, optional): Description
         """
-        titleTextSurf, titleTextRect = self._makeTextObjs(self.configDict["crash_msg"], self.configDict["largeText"])
-        titleTextRect.center = self.configDict["surfaceWidth"] / 2, self.configDict["surfaceHeight"] / 2
+        titleTextSurf, titleTextRect = self._makeTextObjs(screen_message, font)
+        titleTextRect.center = centre_offset_x, centre_offset_y
         self.configDict["surface"].blit(titleTextSurf, titleTextRect)
-
-        # TODO
-        #pygame.mixer.Sound.play(crash_sound)
-        #pygame.mixer.music.stop()
-        typTextSurf, typTextRect = self._makeTextObjs(self.configDict["game_continue_msg"], self.configDict["smallText"])
-        typTextRect.center =  self.configDict["surfaceWidth"] / 2, ((self.configDict["surfaceHeight"] / 2) + 100)
-        self.configDict["surface"].blit(typTextSurf, typTextRect)
-
-        pygame.display.update()
-        time.sleep(1)
-
-        if self._replay_or_quit() == None:
-            self.__init__()
-            self.fly()
         return
 
     def _gameOver(self):
@@ -124,19 +116,28 @@ class FlappyBird:
             TYPE: Description
         """
         self.configDict["game_over"] = True
-        self._msgSurface()
+        self._msgSurface(self.configDict["crash_msg"],  self.configDict["largeText"], self.configDict["surfaceWidth"] / 2, self.configDict["surfaceHeight"] / 2)
+        self._msgSurface(self.configDict["game_continue_msg"], self.configDict["smallText"], self.configDict["surfaceWidth"] / 2, self.configDict["surfaceHeight"] / 2 + 100)
+
+        # TODO
+        #pygame.mixer.Sound.play(crash_sound)
+        #pygame.mixer.music.stop()
+
+        pygame.display.update()
+        time.sleep(1)
+
+        if self._replay_or_quit() == None:
+            self.__init__()
+            self.fly()
         return
 
     def _gameVictory(self):
         """
-
         Returns:
             TYPE: Description
         """
-        typTextSurf, typTextRect = self._makeTextObjs(self.configDict["game_complete_msg"], self.configDict["smallText"])
-        typTextRect.center = self.configDict["surfaceWidth"] / 2, ((self.configDict["surfaceHeight"] / 2))
-        self.configDict["surface"].blit(typTextSurf, typTextRect)
-
+        self._msgSurface(self.configDict["game_complete_msg_hurray"], self.configDict["largeText"], self.configDict["surfaceWidth"] / 2, self.configDict["surfaceHeight"] / 2)
+        self._msgSurface(self.configDict["game_complete_msg_desc"], self.configDict["smallText"], self.configDict["surfaceWidth"] / 2, self.configDict["surfaceHeight"] / 2 + 100)
         pygame.display.update()
         quit(0)
         return
@@ -153,7 +154,6 @@ class FlappyBird:
 
     def _stateValidation(self):
         """
-
         Return:
             TYPE: Description
         """
@@ -176,6 +176,8 @@ class FlappyBird:
 
     def _update_gap(self):
         """
+        Returns:
+            TYPE: Description
 
 
         """
@@ -183,10 +185,17 @@ class FlappyBird:
         self.configDict["gap"] = int(self.configDict["gap"] / (0.1 + 0.3 * self.configDict["current_level"]))
         return
 
+    def _update_speed(self):
+        """Summary
+
+        Returns:
+            TYPE: Description
+        """
+        self.configDict["speed"] += 0.2 * self.configDict["current_level"]
+        return
 
     def _update_level(self):
         """
-
         Return:
             Description
         """
@@ -194,11 +203,11 @@ class FlappyBird:
             # Increase level after a  certain score
             self.configDict["current_level"] += 1
             self._update_gap()
+            self._update_speed()
         return
 
     def _compute_score(self):
         """
-
         Return:
             Description
         """
@@ -210,12 +219,29 @@ class FlappyBird:
             self._update_level()
         return
 
+    def _update_display(self):
+        """Summary
+
+        Returns:
+            TYPE: Description
+        """
+        self._blocks(self.configDict["blockColor"])
+        self._update_bird()
+        self._display_score()
+        self._display_level()
+
+        return
+
     def fly(self):
         """Summary
 
         Returns:
             TYPE: Description
         """
+        while self._replay_or_quit is None:
+            # Waiting for user input
+            self._msgSurface()
+            pass
         while not self.configDict["game_over"] and self.configDict["current_level"] <= self.configDict["max_levels"] and self.configDict["current_score"] <= self.configDict["max_score_possible"]:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
@@ -233,13 +259,10 @@ class FlappyBird:
 
             self.configDict["y"] += self.configDict["y_move"]
 
-            self.configDict["surface"].fill(self.configDict["black"])  # black color fill
-            # self.configDict["surface"].blit(self.configDict["background"], (0, 0))
-            self._update_bird()
-            self._blocks(self.configDict["blockColor"])
-            self._display_score()
-            self._display_level()
-            self.configDict["x_block"] -= self.configDict["block_move"]
+            # self.configDict["surface"].fill(self.configDict["black"])  # black color fill
+            self.configDict["surface"].blit(self.configDict["background"], [0, 0])
+            self._update_display()
+            self.configDict["x_block"] = self.configDict["x_block"] - self.configDict["speed"] * self.configDict["block_move"]
             self._stateValidation()
             if not self.configDict["game_over"]:
                 self._compute_score()

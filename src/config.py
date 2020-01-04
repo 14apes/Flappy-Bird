@@ -27,8 +27,8 @@ def initialize():
     configDict["black"] = black
     configDict["sunset"] = sunset
 
-    configDict["surfaceWidth"] = 800
-    configDict["surfaceHeight"] = 500
+    configDict["surfaceWidth"] = 1500
+    configDict["surfaceHeight"] = 900
 
     configDict["imageHeight"] = 20
     configDict["imageWidth"] = 20
@@ -69,9 +69,10 @@ def initialize():
     configDict["max_user_score"] = 0
     configDict["user_name"] = None
     configDict["max_levels"] = 10
-    configDict["max_score_in_level"] = 20
+    configDict["max_score_in_level"] = 10
     configDict["max_score_possible"] = configDict["max_levels"] * configDict["max_score_in_level"]
-    configDict["game_complete_msg"] = "Hurray! You have completed all levels"
+    configDict["game_complete_msg_hurray"] = "Hurray!"
+    configDict["game_complete_msg_desc"] = "You have completed all levels"
     configDict["smallText"] = pygame.font.SysFont("Arial", 20)
     configDict["largeText"] = pygame.font.SysFont("Arial", 150)
 
@@ -88,8 +89,15 @@ def initialize():
     background.blit(charImage, charRect)  # This just makes it in the same location
     # # and prints it the same size as the image
     #
-    # configDict["background"] = pygame.image.load("media/background1.png")
-    configDict["background"] = background
+    # Almost Original Background
+    configDict["background"] = pygame.image.load("media/background1.png")
+    # Space nebula background
+    # configDict["background"] = pygame.image.load("media/space_nebula1.jpg")
+    # Image needs to be of higher resolution
+    # configDict["background"] = pygame.image.load("media/space_galaxy1.jpg")
+
+    # configDict["background"] = background
+    configDict["speed"] = 1
 
 
     return configDict
