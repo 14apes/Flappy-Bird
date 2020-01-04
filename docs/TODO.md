@@ -8,6 +8,8 @@
 * Add multiplayer option
 * Create themes [flappy bird(default), space, ocean(nemo), snow, deer escape(from top)]
 * Add pause functionality for single player mode
+* Store user profile/best scores
+*
 
 # DONE
 * Pass all global variables in configDict instead of func args
