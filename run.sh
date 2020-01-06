@@ -1,4 +1,4 @@
 #!/bin/bash
-pushd src/
-python flappyBird.py
-popd
+source .fbVE/bin/activate
+python main.py
+deactivate
