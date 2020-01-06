@@ -35,11 +35,14 @@ def initialize():
 
     # Py Game Initialization
     pygame.init()
-    _ = pygame.mixer.Sound("media/crash.wav")
+    # _ = pygame.mixer.Sound("media/music1.wav")
+    configDict["game_music"] = "media/music1.wav"
+    configDict["crash_music"] = "media/crash1.wav"
+    configDict["victory_music"] = "media/win1.wav"
     # this object will be useful when we want to add music volume contol functionality to the game
     # configDict["pygame_sound_obj"] = pygame.mixer.Sound("media/crash.wav")
 
-    configDict["surface"] = pygame.display.set_mode((configDict["surfaceWidth"], configDict["surfaceHeight"]))
+    configDict["surface"] = pygame.display.set_mode((configDict["surfaceWidth"], configDict["surfaceHeight"]), pygame.RESIZABLE)
     pygame.display.set_caption('Flappy Bird Escape')
     configDict["clock"] = pygame.time.Clock()
 
@@ -81,24 +84,27 @@ def initialize():
     background = background.convert()
     background.fill((250, 250, 250))
     #
-    charRect = pygame.Rect((0, 0), (10, 10))
+    # charRect = pygame.Rect((0, 0), (10, 10))
     # print(os.path.abspath("airbender.png"))
-    charImage = pygame.image.load(os.path.abspath("media/background1.png"))
-    charImage = pygame.transform.scale(charImage, charRect.size)
-    charImage = charImage.convert()
+    # charImage = pygame.image.load(os.path.abspath("media/background1.png"))
+    # charImage = pygame.transform.scale(charImage, charRect.size)
+    # charImage = charImage.convert()
 
-    background.blit(charImage, charRect)  # This just makes it in the same location
+    # background.blit(charImage, charRect)  # This just makes it in the same location
     # # and prints it the same size as the image
     #
     # Almost Original Background
     configDict["background"] = pygame.image.load("media/background1.png")
     # Space nebula background
-    # configDict["background"] = pygame.image.load("media/space_nebula1.jpg")
     # Image needs to be of higher resolution
-    # configDict["background"] = pygame.image.load("media/space_galaxy1.jpg")
+    # configDict["background"] = pygame.image.load("media/space_nebula1.jpg")
+    configDict["image_rect"] = configDict["background"].convert_alpha().get_rect()
+    configDict["image_translation_offset"] = configDict["image_rect"]
 
     # configDict["background"] = background
     configDict["speed"] = 1
     configDict["pause"] = False
+
+    configDict["mute"] = False
 
     return configDict
