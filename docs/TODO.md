@@ -7,6 +7,7 @@
 * Fix binary of linux [does not work if executable is run from outside repo folder]
 * Create Windows executable as .exe using pyinstaller or pygame2exe or py2exe (have to explore)
 * Fix all UNSOLVED [MAJOR] bugs in BUGS.md
+* Segregate methods which are not exclusive to flappy bird, and can be used by other games as a PygameUtils library
 
 # GO-WILD
 * Use reinforcement learning from Open-AI mixed with Genetic Algorithms
