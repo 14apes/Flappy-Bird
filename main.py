@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 import pygame
-from src.FlappyBird import FlappyBird
+from src.FluffyBird import FluffyBird
 
 if __name__ == '__main__':
-    bird = FlappyBird()
+    bird = FluffyBird()
     bird.fly()
     pygame.quit()
     quit()

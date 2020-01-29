@@ -43,7 +43,7 @@ def initialize():
     # configDict["pygame_sound_obj"] = pygame.mixer.Sound("media/crash.wav")
 
     configDict["surface"] = pygame.display.set_mode((configDict["surfaceWidth"], configDict["surfaceHeight"]), pygame.RESIZABLE)
-    pygame.display.set_caption('Flappy Bird Escape')
+    pygame.display.set_caption('Fluffy Bird Escape')
     configDict["clock"] = pygame.time.Clock()
 
     configDict["bird_image"] = pygame.image.load("media/bird.png")
